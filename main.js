@@ -18,13 +18,13 @@ window.onload = function() {
 			this.y = y;
 			this.scale(1.5,1.5);
 			this.frame = 1;
-			this.image = core.assets['res/sprite.png'];
+			this.image = core.assets['res/sprite2.png'];
 			// this.backgroundColor = 'yellow';
 			this.on('enterframe', function() {
 				if(this.age % 30 == 0) {
-					//var sound = core.assets['res/bgm1.wav'].clone();
-					//sound.volume = 0.1;
-					//sound.play();
+					var sound = core.assets['res/bgm1.wav'].clone();
+					sound.volume = 0.1;
+					sound.play();
 				}
 				if(this.age % 2 != 0) return;
 				this.attack_sleep++;
@@ -60,23 +60,20 @@ window.onload = function() {
 			this.x = x;
 			this.y = y;
 			this.delay = delay;
-			this.image = core.assets['res/sprite.png'];
-
-			//enemyType to frameNo
-			if(enemyType == 0) { //usagi
-				this.frame = 3;
+			this.image = core.assets['res/sprite2.png'];
+			this.enemyType = enemyType;
+			this.framePattern = false;
+			if(this.enemyType == 2) { //uchujin
+					this.scale(1.4,1.4);
 			}
-			else if(enemyType == 1) { //pisuke
-				this.frame = 4;
-			}
-			else if(enemyType == 2) { //uchujin
-				this.frame = 2;
-				this.scale(1.4,1.4);
-			}
-
+			this.frameUpdate(this);
+			
 			// this.backgroundColor = 'red';
 			this.on('enterframe', function() {
 				if(this.age % (30+this.delay) != 0) return;
+				
+				this.frameUpdate(this);
+				
 				var mvDistance = 4;
 				if(this.move < mvDistance) {
 					if(this.arrow) {
@@ -102,6 +99,23 @@ window.onload = function() {
 	    },
 		test: function(){
 			this.frame += 1;
+		},
+		frameUpdate: function(obj) {
+			//enemyType to frameNo
+			var frame = 0;
+			if(obj.enemyType == 0) { //usagi
+				obj.frame = 3;
+				if(!obj.framePattern) obj.frame = 4;
+				obj.framePattern = !obj.framePattern;						
+			}
+			else if(obj.enemyType == 1) { //pisuke
+				obj.frame = 2;
+				if(!obj.framePattern) obj.frame = 5;
+				obj.framePattern = !obj.framePattern;						
+			}
+			else if(obj.enemyType == 2) { //uchujin
+				obj.frame = 6;
+			}
 		}
 	});
 
@@ -113,7 +127,7 @@ window.onload = function() {
 			this.x = x;
 			this.y = y;
 			this.frame = 0;
-			this.image = core.assets['res/sprite.png'];
+			this.image = core.assets['res/sprite2.png'];
 			var sound = core.assets['res/neevoice.wav'].clone();
 			sound.play();
 
@@ -174,7 +188,7 @@ window.onload = function() {
 	//プレイグラウンド初期化
 	var core = new Core(320, 420);
 	//core.scale = 2;
-	core.preload('res/sprite.png');
+	core.preload('res/sprite2.png');
 	core.preload('res/tokutenLabel.png');
 	core.preload('res/neevoice.wav');
 	core.preload('res/bgm1.wav');
@@ -261,3 +275,4 @@ function previewCenter ( game ){
     game._pageX = left;
     game._pageY = top;
 }
+
